@@ -28,9 +28,10 @@ jobs:
           node-version: '22'
 
       - name: Install dependencies
-        run: npm install --force
-          cd android
-          chmod +x gradlew
+  run: |
+    npm install --force
+    cd android
+    chmod +x gradlew
 
       - name: Build Debug APK
         run: |
