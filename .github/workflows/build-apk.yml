@@ -13,30 +13,33 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Java
+      - name: Setup Java (Temurin 17)
         uses: actions/setup-java@v4
         with:
+          distribution: temurin
           java-version: '17'
-          distribution: 'temurin'
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          api-level: 33
 
-      - name: Setup Node.js
+      - name: Setup Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      - name: Install dependencies
-  run: |
-    npm install --force
-    cd android
-    chmod +x gradlew
-
-      - name: Build Debug APK
+      - name: Install JS dependencies
         run: |
-          cd android
-          ./gradlew assembleDebug
+          # agar project me package-lock.json ho to `npm ci --force` consider karo
+          npm install --force
+
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
+
+      - name: Build Debug APK (gradle)
+        working-directory: android
+        run: ./gradlew assembleDebug
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
